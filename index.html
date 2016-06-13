@@ -5,12 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-
+<form id="form">
+    <input name="name" type="text" value="张三"><br>
+    <input name="name" type="text" value="李四"><br>
+    <input type="password" name="pass" value="888888"><br>
+    <input name="love" value="0" type="checkbox">0
+    <input name="love" value="1" type="checkbox">1    <br>
+    <input name="c" value="0" type="radio">0
+    <input name="c" value="1" type="radio">1<br>
+    <input type="button" id="btn" value="click">
+</form>
 <script src="form-util.js"></script>
 <script>
-    formUtil.verity("password", "444444", function (data) {
+    formUtil.verity("password", "44444", function (data) {
         console.log(data)
     });
+    document.getElementById("btn").addEventListener("click",function(){
+        console.log(formUtil.formToJSON(document.getElementById("form")));
+    },false);
 </script>
 </body>
 </html>
