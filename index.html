@@ -17,11 +17,11 @@
 </form>
 <script src="form-util.js"></script>
 <script>
-    formUtil.verity("password", "44444", function (data) {
+    formUtil.verity("password", "444444", function (data) {
         console.log(data)
     });
     document.getElementById("btn").addEventListener("click",function(){
-        console.log(formUtil.formToJSON(document.getElementById("form")));
+        console.log(formUtil.formToQuery(document.getElementById("form")));
     },false);
 </script>
 </body>

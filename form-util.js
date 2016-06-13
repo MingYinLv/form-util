@@ -60,27 +60,32 @@
         var trim = function (value) {
             return value.replace(/^(\s|\u00A0)+/, '').replace(/(\s|\u00A0)+$/, '');
         };
+        //获得form中带有name属性得表单
+        var getAllName = function (formDom) {
+            var _arr = [];
+            _arr = _arr.concat(Array.prototype.slice.apply(formDom.getElementsByTagName('input')));
+            _arr = _arr.concat(Array.prototype.slice.apply(formDom.getElementsByTagName('select')));
+            _arr = _arr.concat(Array.prototype.slice.apply(formDom.getElementsByTagName('textarea')));
+            return _arr;
+        };
+
         /**
          * 将form转换为JSON对象
          * @param formDom form的dom对象
          */
         var formToJSON = function (formDom) {
-            var _arr = [], _obj = {}, _name, _temp, _value;
-
-            _arr = _arr.concat(Array.prototype.slice.apply(formDom.getElementsByTagName('input')));
-            _arr = _arr.concat(Array.prototype.slice.apply(formDom.getElementsByTagName('select')));
-            _arr = _arr.concat(Array.prototype.slice.apply(formDom.getElementsByTagName('textarea')));
+            var _arr = getAllName(formDom), _obj = {}, _name, _temp, _value;
             for (var i = 0, len = _arr.length; i < len; i++) {
                 _temp = _arr[i];
-                _name = _temp.getAttribute('name');
-                _value = _temp.getAttribute('value');
+                _name = _temp.name;
+                _value = _temp.value;
                 if (_name && !_obj[_name]) {
                     if (_temp.checked || (_temp.getAttribute('type') !== 'checkbox' && _temp.getAttribute('type') !== 'radio')) {
                         _obj[_name] = _value;
                     }
                 } else if (_name) {
                     if (_temp.checked || (_temp.getAttribute('type') !== 'checkbox' && _temp.getAttribute('type') !== 'radio')) {
-                        if (typeof _obj[_name] === 'string'){
+                        if (typeof _obj[_name] === 'string') {
                             _obj[_name] = [_obj[_name]];
                         }
                         _obj[_name].push(_value);
@@ -88,6 +93,25 @@
                 }
             }
             return _obj;
+        };
+        /**
+         * 将form转换为参数格式(name=xx&&pass=xxx)
+         * @param formDom
+         */
+        var formToQuery = function (formDom) {
+            var _arr = getAllName(formDom), _name, _temp, _value, _str = '';
+            for (var i = 0, len = _arr.length; i < len; i++) {
+                _temp = _arr[i];
+                _name = _temp.name;
+                _value = _temp.value;
+                if (_name && (_temp.checked || (_temp.getAttribute('type') !== 'checkbox' && _temp.getAttribute('type') !== 'radio'))) {
+                    _str += _name + "=" + _value + "&"
+                }
+            }
+            if (len > 0) {
+                _str = _str.substr(0, _str.length - 1);
+            }
+            return _str;
         };
         return {
             /**
@@ -108,7 +132,8 @@
             'modifyVerity': function (ruleName, rule) {
                 validate[ruleName] = rule;
             },
-            'formToJSON': formToJSON
+            'formToJSON': formToJSON,
+            'formToQuery': formToQuery
         }
     };
 
