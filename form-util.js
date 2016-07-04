@@ -3,7 +3,7 @@
         //表单验证
         var validate = {
             'mobile': /^1[3|4|5|7|8]\d{9}$/,
-            'realName': '',
+            'realName': /^[\u4e00-\u9fa5]{2,4}$/,
             'null': function (value) {
                 if (trim(value).length === 0) {
                     return false;
